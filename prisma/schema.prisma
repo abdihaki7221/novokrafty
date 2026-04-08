@@ -137,7 +137,7 @@ model SiteSettings {
   companyName String   @default("Novokraft Limited")
   tagline     String   @default("Engineering the Future")
   email       String   @default("hello@novokraft.com")
-  phone       String   @default("+254 707 332 229)
+  phone       String   @default("+254 707 332 229")
   address     String   @default("Nairobi, Kenya")
   mission     String   @default("")
   vision      String   @default("")
