@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  avatar    String?
+  createdAt DateTime @default(now())
+}
+
+model SiteVisit {
+  id        String   @id @default(cuid())
+  page      String
+  referrer  String?
+  userAgent String?
+  ip        String?
+  country   String?
+  createdAt DateTime @default(now())
+}
+
+model DemoClick {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  referrer  String?
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  category    String
+  description String
+  longDesc    String?
+  image       String?
+  demoUrl     String?
+  videoUrl    String?
+  techStack   String[]
+  featured    Boolean     @default(false)
+  published   Boolean     @default(true)
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  demoClicks  DemoClick[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  icon        String
+  description String
+  features    String[]
+  published   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String?
+  image     String?
+  linkedin  String?
+  twitter   String?
+  github    String?
+  sortOrder Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  logo      String?
+  website   String?
+  tier      String   @default("partner") // partner, gold, platinum
+  published Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Career {
+  id          String   @id @default(cuid())
+  title       String
+  department  String
+  type        String   // Full-time, Part-time, Contract, Internship
+  location    String
+  description String
+  requirements String[]
+  salary      String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  company   String?
+  text      String
+  image     String?
+  rating    Int      @default(5)
+  published Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  subject   String?
+  message   String
+  read      Boolean  @default(false)
+  replied   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id          String   @id @default("main")
+  companyName String   @default("Novokraft Limited")
+  tagline     String   @default("Engineering the Future")
+  email       String   @default("hello@novokraft.com")
+  phone       String   @default("+254 707 332 229)
+  address     String   @default("Nairobi, Kenya")
+  mission     String   @default("")
+  vision      String   @default("")
+  values      String[]
+  linkedin    String?
+  twitter     String?
+  github      String?
+  youtube     String?
+  updatedAt   DateTime @updatedAt
+}
