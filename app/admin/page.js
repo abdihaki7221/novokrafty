@@ -6,8 +6,9 @@ import { Eye, EyeOff, LogOut, LayoutDashboard, FolderOpen, Settings, Briefcase, 
 // ─── API Helper ───
 async function api(path, opts = {}) {
   const res = await fetch(path, { ...opts, headers: { 'Content-Type': 'application/json', ...opts.headers } });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  const data = await res.json().catch(() => ({ error: `HTTP ${res.status} ${res.statusText}` }));
+  if (!res.ok) throw new Error(data.error || data.message || `API error ${res.status}`);
+  return data;
 }
 
 // ─── Glassmorphic Admin UI Components ───
