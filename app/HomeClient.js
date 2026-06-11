@@ -9,7 +9,33 @@ const iconMap = {
   CreditCard, Bot, Settings, Smartphone, Globe, Users, BarChart3, Puzzle,
 };
 
+const SETTINGS_FALLBACK = {
+  heroBadge: 'Pioneering Digital Transformation Across Africa',
+  heroTitleLine1: 'We Architect', heroTitleLine2: 'Software That', heroTitleHighlight: 'Moves Needles',
+  heroSubtitle: "From fintech infrastructure to AI-powered agents, we engineer the systems that power East Africa's most ambitious companies.",
+  heroCtaPrimary: 'Start Your Project', heroCtaSecondary: 'View Our Work',
+  techStack: ['React', 'Next.js', 'Node.js', 'Python', 'Flutter', 'PostgreSQL', 'AWS', 'TensorFlow', 'Docker', 'Kubernetes'],
+  stat1Value: '120+', stat1Label: 'Projects Delivered', stat2Value: '45+', stat2Label: 'Active Clients',
+  stat3Value: '30+', stat3Label: 'Team Members', stat4Value: '99.9%', stat4Label: 'Uptime SLA',
+  servicesSubtitle: 'Capabilities', servicesTitle: 'Full-Spectrum Software Engineering',
+  servicesDesc: "We don't just write code. We architect systems that scale, delight users, and drive measurable business outcomes.",
+  projectsSubtitle: 'Portfolio', projectsTitle: 'Projects That Speak Volumes',
+  projectsDesc: 'Real solutions, shipped to production, driving results for real businesses.',
+  testimonialsSubtitle: 'Testimonials', testimonialsTitle: 'Trusted by Ambitious Companies',
+  ctaTitle: 'Ready to Build Something Extraordinary?',
+  ctaDesc: "Let's turn your vision into production-grade reality. Tell us about your project.",
+  ctaButton: 'Get In Touch',
+};
+
 export default function HomeClient({ services, projects, testimonials, settings }) {
+  const s = { ...SETTINGS_FALLBACK, ...(settings || {}) };
+  const techStack = (s.techStack && s.techStack.length) ? s.techStack : SETTINGS_FALLBACK.techStack;
+  const stats = [
+    { value: s.stat1Value, label: s.stat1Label },
+    { value: s.stat2Value, label: s.stat2Label },
+    { value: s.stat3Value, label: s.stat3Label },
+    { value: s.stat4Value, label: s.stat4Label },
+  ];
   return (
     <main>
       {/* ═══════════════════════════════════════ */}
@@ -25,18 +51,18 @@ export default function HomeClient({ services, projects, testimonials, settings 
           <AnimatedSection delay={0}>
             <div className="inline-flex items-center gap-3 glass rounded-full px-5 py-2 mb-8">
               <span className="w-2 h-2 rounded-full bg-accent-mint animate-glow-pulse" />
-              <span className="text-xs font-medium text-white/50 tracking-wide">Pioneering Digital Transformation Across Africa</span>
+              <span className="text-xs font-medium text-white/50 tracking-wide">{s.heroBadge}</span>
             </div>
           </AnimatedSection>
 
           {/* Main Heading */}
           <AnimatedSection delay={100}>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold leading-[0.95] tracking-tight mb-8">
-              <span className="block gradient-text">We Architect</span>
-              <span className="block text-white/90 mt-2">Software That</span>
+              <span className="block gradient-text">{s.heroTitleLine1}</span>
+              <span className="block text-white/90 mt-2">{s.heroTitleLine2}</span>
               <span className="block mt-2">
                 <span className="relative inline-block">
-                  <span className="gradient-text">Moves Needles</span>
+                  <span className="gradient-text">{s.heroTitleHighlight}</span>
                   <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
                     <path d="M1 5.5C40 2 80 2 100 4C120 6 160 4 199 2" stroke="url(#underline-grad)" strokeWidth="2" strokeLinecap="round" />
                     <defs><linearGradient id="underline-grad"><stop stopColor="#4263eb" /><stop offset="1" stopColor="#22d3ee" /></linearGradient></defs>
@@ -49,8 +75,7 @@ export default function HomeClient({ services, projects, testimonials, settings 
           {/* Subtitle */}
           <AnimatedSection delay={200}>
             <p className="text-lg md:text-xl text-white/40 max-w-2xl mx-auto leading-relaxed mb-10 font-light">
-              From fintech infrastructure to AI-powered agents, we engineer the systems
-              that power East Africa's most ambitious companies.
+              {s.heroSubtitle}
             </p>
           </AnimatedSection>
 
@@ -58,10 +83,10 @@ export default function HomeClient({ services, projects, testimonials, settings 
           <AnimatedSection delay={300}>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/contact" className="btn-primary text-base">
-                Start Your Project <ArrowUpRight size={18} />
+                {s.heroCtaPrimary} <ArrowUpRight size={18} />
               </Link>
               <Link href="/projects" className="btn-outline text-base">
-                View Our Work <ArrowRight size={18} />
+                {s.heroCtaSecondary} <ArrowRight size={18} />
               </Link>
             </div>
           </AnimatedSection>
@@ -69,7 +94,7 @@ export default function HomeClient({ services, projects, testimonials, settings 
           {/* Tech Stack Ticker */}
           <AnimatedSection delay={500}>
             <div className="mt-20 flex flex-wrap justify-center gap-3">
-              {['React', 'Next.js', 'Node.js', 'Python', 'Flutter', 'PostgreSQL', 'AWS', 'TensorFlow', 'Docker', 'Kubernetes'].map((tech, i) => (
+              {techStack.map((tech, i) => (
                 <span key={tech} className="glass text-xs text-white/30 px-4 py-2 rounded-full hover:text-white/50 hover:bg-white/[0.04] transition-all duration-300 cursor-default"
                   style={{ animationDelay: `${i * 100}ms` }}>
                   {tech}
@@ -93,10 +118,7 @@ export default function HomeClient({ services, projects, testimonials, settings 
         <section className="px-6 -mt-8 mb-16 relative z-10">
           <div className="max-w-5xl mx-auto glass-strong rounded-3xl py-8 px-4 border-glow">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard value="120+" label="Projects Delivered" />
-              <StatCard value="45+" label="Active Clients" />
-              <StatCard value="30+" label="Team Members" />
-              <StatCard value="99.9%" label="Uptime SLA" />
+              {stats.map((st, i) => (<StatCard key={i} value={st.value} label={st.label} />))}
             </div>
           </div>
         </section>
@@ -108,11 +130,7 @@ export default function HomeClient({ services, projects, testimonials, settings 
       <section className="section-padding">
         <div className="container-narrow">
           <AnimatedSection>
-            <SectionTitle
-              sub="Capabilities"
-              title="Full-Spectrum Software Engineering"
-              desc="We don't just write code. We architect systems that scale, delight users, and drive measurable business outcomes."
-            />
+            <SectionTitle sub={s.servicesSubtitle} title={s.servicesTitle} desc={s.servicesDesc} />
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -183,7 +201,7 @@ export default function HomeClient({ services, projects, testimonials, settings 
       <section className="section-padding">
         <div className="container-narrow">
           <AnimatedSection>
-            <SectionTitle sub="Portfolio" title="Projects That Speak Volumes" desc="Real solutions, shipped to production, driving results for real businesses." />
+            <SectionTitle sub={s.projectsSubtitle} title={s.projectsTitle} desc={s.projectsDesc} />
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -245,7 +263,7 @@ export default function HomeClient({ services, projects, testimonials, settings 
       <section className="section-padding">
         <div className="container-narrow">
           <AnimatedSection>
-            <SectionTitle sub="Testimonials" title="Trusted by Ambitious Companies" />
+            <SectionTitle sub={s.testimonialsSubtitle} title={s.testimonialsTitle} />
           </AnimatedSection>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -288,14 +306,14 @@ export default function HomeClient({ services, projects, testimonials, settings 
                 style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.6), transparent 70%)' }} />
 
               <h2 className="text-3xl md:text-5xl font-display font-bold gradient-text mb-5 relative z-10">
-                Ready to Build Something<br />Extraordinary?
+                {s.ctaTitle}
               </h2>
               <p className="text-base text-white/40 mb-8 max-w-lg mx-auto relative z-10">
-                Let's turn your vision into production-grade reality. Tell us about your project.
+                {s.ctaDesc}
               </p>
               <div className="flex flex-wrap gap-4 justify-center relative z-10">
                 <Link href="/contact" className="btn-primary text-base">
-                  Get In Touch <ArrowUpRight size={18} />
+                  {s.ctaButton} <ArrowUpRight size={18} />
                 </Link>
                 <Link href="/about" className="btn-outline text-base">
                   Learn About Us

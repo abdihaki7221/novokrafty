@@ -5,6 +5,7 @@ import CareersClient from './CareersClient';
 import { prisma } from '@/lib/prisma';
 
 export const metadata = { title: 'Careers — Novokraft Limited' };
+export const dynamic = 'force-dynamic';
 
 export default async function CareersPage() {
   let careers = [];

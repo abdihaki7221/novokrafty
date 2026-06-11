@@ -5,6 +5,7 @@ import ProjectsClient from './ProjectsClient';
 import { prisma } from '@/lib/prisma';
 
 export const metadata = { title: 'Projects — Novokraft Limited' };
+export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage() {
   let projects = [];

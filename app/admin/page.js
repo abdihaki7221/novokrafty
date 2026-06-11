@@ -389,20 +389,41 @@ function SettingsView() {
 
   const save = async () => {
     setSaving(true);
-    try { await api('/api/settings', { method: 'PUT', body: JSON.stringify(settings) }); setToast('Settings saved!'); } catch { setToast('Error saving'); }
+    try { await api('/api/settings', { method: 'PUT', body: JSON.stringify(settings) }); setToast('Settings saved!'); }
+    catch (e) { setToast('Error: ' + e.message); }
     setSaving(false);
   };
 
   const update = (key) => (val) => setSettings(s => ({ ...s, [key]: val }));
+  const toggle = (key) => setSettings(s => ({ ...s, [key]: !s[key] }));
 
   if (loading) return <div className="flex items-center justify-center py-20"><Loader2 size={24} className="animate-spin text-white/30" /></div>;
   if (!settings) return <Glass className="p-10 text-center text-white/30">Could not load settings</Glass>;
 
+  const Toggle = ({ label, value, onClick }) => (
+    <div className="flex items-center justify-between py-2">
+      <label className="text-sm text-white/60">{label}</label>
+      <button onClick={onClick} className={`w-11 h-6 rounded-full transition-all ${value ? 'bg-blue-600' : 'bg-white/10'}`}>
+        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${value ? 'translate-x-6' : 'translate-x-1'}`} />
+      </button>
+    </div>
+  );
+
+  const Sec = ({ title, children }) => (
+    <Glass className="p-6 mb-6">
+      <h3 className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-4">{title}</h3>
+      {children}
+    </Glass>
+  );
+
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-6" style={{ fontFamily: 'Syne, system-ui' }}>Site Settings</h2>
-      <Glass className="p-6 mb-6">
-        <h3 className="text-xs uppercase tracking-wider text-white/40 font-semibold mb-4">General</h3>
+    <div className="pb-24">
+      <div className="flex items-center justify-between mb-6 sticky top-0 z-20 bg-[#04040c]/80 backdrop-blur-xl py-3 -mx-2 px-2 rounded-xl">
+        <h2 className="text-xl font-bold" style={{ fontFamily: 'Syne, system-ui' }}>Site Content & Settings</h2>
+        <Btn primary onClick={save} disabled={saving}>{saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Save All Changes</Btn>
+      </div>
+
+      <Sec title="General / Company">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input label="Company Name" value={settings.companyName || ''} onChange={update('companyName')} />
           <Input label="Tagline" value={settings.tagline || ''} onChange={update('tagline')} />
@@ -410,26 +431,117 @@ function SettingsView() {
           <Input label="Phone" value={settings.phone || ''} onChange={update('phone')} />
           <Input label="Address" value={settings.address || ''} onChange={update('address')} className="md:col-span-2" />
         </div>
-      </Glass>
+      </Sec>
 
-      <Glass className="p-6 mb-6">
-        <h3 className="text-xs uppercase tracking-wider text-white/40 font-semibold mb-4">Mission & Vision</h3>
+      <Sec title="WhatsApp Contact">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input label="WhatsApp Number (with country code)" value={settings.whatsappNumber || ''} onChange={update('whatsappNumber')} placeholder="+254707332229" />
+          <Input label="Pre-filled Message" value={settings.whatsappMessage || ''} onChange={update('whatsappMessage')} placeholder="Hi Novokraft..." />
+        </div>
+      </Sec>
+
+      <Sec title="Hero Section (Homepage)">
+        <Input label="Badge Text" value={settings.heroBadge || ''} onChange={update('heroBadge')} className="mb-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input label="Title Line 1" value={settings.heroTitleLine1 || ''} onChange={update('heroTitleLine1')} />
+          <Input label="Title Line 2" value={settings.heroTitleLine2 || ''} onChange={update('heroTitleLine2')} />
+          <Input label="Title Highlight" value={settings.heroTitleHighlight || ''} onChange={update('heroTitleHighlight')} />
+        </div>
+        <Input label="Subtitle" value={settings.heroSubtitle || ''} onChange={update('heroSubtitle')} multiline className="mt-4 mb-4" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input label="Primary Button Text" value={settings.heroCtaPrimary || ''} onChange={update('heroCtaPrimary')} />
+          <Input label="Secondary Button Text" value={settings.heroCtaSecondary || ''} onChange={update('heroCtaSecondary')} />
+        </div>
+        <Input label="Tech Stack Ticker (comma-separated)" value={(settings.techStack || []).join(', ')} onChange={v => update('techStack')(v.split(',').map(x => x.trim()).filter(Boolean))} className="mt-4" />
+      </Sec>
+
+      <Sec title="Stats Bar">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input label="Stat 1 Value" value={settings.stat1Value || ''} onChange={update('stat1Value')} />
+          <Input label="Stat 1 Label" value={settings.stat1Label || ''} onChange={update('stat1Label')} />
+          <Input label="Stat 2 Value" value={settings.stat2Value || ''} onChange={update('stat2Value')} />
+          <Input label="Stat 2 Label" value={settings.stat2Label || ''} onChange={update('stat2Label')} />
+          <Input label="Stat 3 Value" value={settings.stat3Value || ''} onChange={update('stat3Value')} />
+          <Input label="Stat 3 Label" value={settings.stat3Label || ''} onChange={update('stat3Label')} />
+          <Input label="Stat 4 Value" value={settings.stat4Value || ''} onChange={update('stat4Value')} />
+          <Input label="Stat 4 Label" value={settings.stat4Label || ''} onChange={update('stat4Label')} />
+        </div>
+      </Sec>
+
+      <Sec title="Homepage Section Headings">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Input label="Services Subtitle" value={settings.servicesSubtitle || ''} onChange={update('servicesSubtitle')} />
+          <Input label="Services Title" value={settings.servicesTitle || ''} onChange={update('servicesTitle')} className="md:col-span-2" />
+        </div>
+        <Input label="Services Description" value={settings.servicesDesc || ''} onChange={update('servicesDesc')} multiline className="mb-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Input label="Projects Subtitle" value={settings.projectsSubtitle || ''} onChange={update('projectsSubtitle')} />
+          <Input label="Projects Title" value={settings.projectsTitle || ''} onChange={update('projectsTitle')} className="md:col-span-2" />
+        </div>
+        <Input label="Projects Description" value={settings.projectsDesc || ''} onChange={update('projectsDesc')} multiline className="mb-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input label="Testimonials Subtitle" value={settings.testimonialsSubtitle || ''} onChange={update('testimonialsSubtitle')} />
+          <Input label="Testimonials Title" value={settings.testimonialsTitle || ''} onChange={update('testimonialsTitle')} className="md:col-span-2" />
+        </div>
+      </Sec>
+
+      <Sec title="Call-To-Action Block (Homepage)">
+        <Input label="CTA Title" value={settings.ctaTitle || ''} onChange={update('ctaTitle')} className="mb-4" />
+        <Input label="CTA Description" value={settings.ctaDesc || ''} onChange={update('ctaDesc')} multiline className="mb-4" />
+        <Input label="CTA Button Text" value={settings.ctaButton || ''} onChange={update('ctaButton')} />
+      </Sec>
+
+      <Sec title="Contact Page">
+        <div className="mb-4">
+          <label className="block text-xs text-white/40 mb-2 font-medium uppercase tracking-wider">Contact Mode</label>
+          <div className="flex gap-2">
+            <button onClick={() => update('contactMode')('whatsapp')} className={`px-4 py-2 rounded-xl text-sm transition-all ${settings.contactMode !== 'form' ? 'bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30' : 'bg-white/[0.04] text-white/40'}`}>WhatsApp Only</button>
+            <button onClick={() => update('contactMode')('form')} className={`px-4 py-2 rounded-xl text-sm transition-all ${settings.contactMode === 'form' ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30' : 'bg-white/[0.04] text-white/40'}`}>Form + WhatsApp</button>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Input label="Subtitle" value={settings.contactSubtitle || ''} onChange={update('contactSubtitle')} />
+          <Input label="Title" value={settings.contactTitle || ''} onChange={update('contactTitle')} className="md:col-span-2" />
+        </div>
+        <Input label="Description" value={settings.contactDesc || ''} onChange={update('contactDesc')} multiline className="mb-4" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input label="Location" value={settings.contactLocation || ''} onChange={update('contactLocation')} />
+          <Input label="Location Subtext" value={settings.contactLocationSub || ''} onChange={update('contactLocationSub')} />
+          <Input label="Email Subtext" value={settings.contactEmailSub || ''} onChange={update('contactEmailSub')} />
+          <Input label="Phone Subtext" value={settings.contactPhoneSub || ''} onChange={update('contactPhoneSub')} />
+          <Input label="Hours Value" value={settings.contactHoursValue || ''} onChange={update('contactHoursValue')} />
+          <Input label="Hours Subtext" value={settings.contactHoursSub || ''} onChange={update('contactHoursSub')} />
+        </div>
+      </Sec>
+
+      <Sec title="About Page">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Input label="Subtitle" value={settings.aboutSubtitle || ''} onChange={update('aboutSubtitle')} />
+          <Input label="Title" value={settings.aboutTitle || ''} onChange={update('aboutTitle')} className="md:col-span-2" />
+        </div>
+        <Input label="Description" value={settings.aboutDesc || ''} onChange={update('aboutDesc')} multiline className="mb-4" />
         <Input label="Mission" value={settings.mission || ''} onChange={update('mission')} multiline className="mb-4" />
         <Input label="Vision" value={settings.vision || ''} onChange={update('vision')} multiline className="mb-4" />
-        <Input label="Values (comma-separated)" value={(settings.values || []).join(', ')} onChange={v => update('values')(v.split(',').map(s => s.trim()).filter(Boolean))} />
-      </Glass>
+        <Input label="Values (comma-separated)" value={(settings.values || []).join(', ')} onChange={v => update('values')(v.split(',').map(x => x.trim()).filter(Boolean))} />
+      </Sec>
 
-      <Glass className="p-6 mb-6">
-        <h3 className="text-xs uppercase tracking-wider text-white/40 font-semibold mb-4">Social Links</h3>
+      <Sec title="Footer">
+        <Input label="Footer Tagline" value={settings.footerTagline || ''} onChange={update('footerTagline')} multiline className="mb-4" />
+        <Input label="Copyright Text" value={settings.footerCopyright || ''} onChange={update('footerCopyright')} placeholder="Novokraft Limited. All rights reserved." />
+      </Sec>
+
+      <Sec title="Social Links">
+        <Toggle label="Show social links on site" value={settings.showSocials} onClick={() => toggle('showSocials')} />
+        <p className="text-xs text-white/25 mb-4">When off, no social icons appear anywhere. Leave a field blank to hide just that one.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input label="LinkedIn" value={settings.linkedin || ''} onChange={update('linkedin')} placeholder="https://linkedin.com/..." />
           <Input label="Twitter / X" value={settings.twitter || ''} onChange={update('twitter')} placeholder="https://twitter.com/..." />
           <Input label="GitHub" value={settings.github || ''} onChange={update('github')} placeholder="https://github.com/..." />
           <Input label="YouTube" value={settings.youtube || ''} onChange={update('youtube')} placeholder="https://youtube.com/..." />
         </div>
-      </Glass>
+      </Sec>
 
-      <Btn primary onClick={save} disabled={saving}>{saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Save Settings</Btn>
+      <Btn primary onClick={save} disabled={saving}>{saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Save All Changes</Btn>
       {toast && <Toast message={toast} onClose={() => setToast('')} />}
     </div>
   );

@@ -13,7 +13,7 @@ export default function AboutClient({ settings, team, partners }) {
       <section className="section-padding pt-16">
         <div className="container-narrow">
           <AnimatedSection>
-            <SectionTitle sub="About Novokraft" title="The Story Behind the Code" desc="We're not just developers. We're craftspeople obsessed with building software that transforms how businesses operate." />
+            <SectionTitle sub={s.aboutSubtitle || "About Novokraft"} title={s.aboutTitle || "The Story Behind the Code"} desc={s.aboutDesc || "We're not just developers. We're craftspeople obsessed with building software that transforms how businesses operate."} />
           </AnimatedSection>
         </div>
       </section>

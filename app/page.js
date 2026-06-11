@@ -5,6 +5,8 @@ import Footer from '@/components/layout/Footer';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
 import HomeClient from './HomeClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   let services = [], projects = [], testimonials = [], settings = null;
 

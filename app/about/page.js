@@ -5,6 +5,7 @@ import AboutClient from './AboutClient';
 import { prisma } from '@/lib/prisma';
 
 export const metadata = { title: 'About — Novokraft Limited' };
+export const dynamic = 'force-dynamic';
 
 export default async function AboutPage() {
   let settings = null, team = [], partners = [];

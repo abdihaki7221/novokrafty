@@ -142,9 +142,73 @@ model SiteSettings {
   mission     String   @default("")
   vision      String   @default("")
   values      String[]
+
+  // Social links (optional - shown only if set & enabled)
   linkedin    String?
   twitter     String?
   github      String?
   youtube     String?
+  showSocials Boolean  @default(false)
+
+  // WhatsApp contact
+  whatsappNumber  String?  @default("+254707332229")
+  whatsappMessage String?  @default("Hi Novokraft, I'd like to discuss a project.")
+
+  // ── HERO SECTION ──
+  heroBadge        String  @default("Pioneering Digital Transformation Across Africa")
+  heroTitleLine1   String  @default("We Architect")
+  heroTitleLine2   String  @default("Software That")
+  heroTitleHighlight String @default("Moves Needles")
+  heroSubtitle     String  @default("From fintech infrastructure to AI-powered agents, we engineer the systems that power East Africa's most ambitious companies.")
+  heroCtaPrimary   String  @default("Start Your Project")
+  heroCtaSecondary String  @default("View Our Work")
+  techStack        String[]
+
+  // ── STATS ──
+  stat1Value String @default("120+")
+  stat1Label String @default("Projects Delivered")
+  stat2Value String @default("45+")
+  stat2Label String @default("Active Clients")
+  stat3Value String @default("30+")
+  stat3Label String @default("Team Members")
+  stat4Value String @default("99.9%")
+  stat4Label String @default("Uptime SLA")
+
+  // ── SECTION HEADINGS (home) ──
+  servicesSubtitle String @default("Capabilities")
+  servicesTitle    String @default("Full-Spectrum Software Engineering")
+  servicesDesc     String @default("We don't just write code. We architect systems that scale, delight users, and drive measurable business outcomes.")
+  projectsSubtitle String @default("Portfolio")
+  projectsTitle    String @default("Projects That Speak Volumes")
+  projectsDesc     String @default("Real solutions, shipped to production, driving results for real businesses.")
+  testimonialsSubtitle String @default("Testimonials")
+  testimonialsTitle    String @default("Trusted by Ambitious Companies")
+
+  // ── CTA BLOCK (home) ──
+  ctaTitle    String @default("Ready to Build Something Extraordinary?")
+  ctaDesc     String @default("Let's turn your vision into production-grade reality. Tell us about your project.")
+  ctaButton   String @default("Get In Touch")
+
+  // ── CONTACT PAGE ──
+  contactSubtitle String @default("Contact")
+  contactTitle    String @default("Let's Start a Conversation")
+  contactDesc     String @default("Tell us about your project and we'll get back to you immediately.")
+  contactMode     String @default("whatsapp") // "whatsapp" or "form"
+  contactLocation String @default("Westlands, Nairobi, Kenya")
+  contactLocationSub String @default("East Africa")
+  contactHoursValue String @default("Monday — Friday")
+  contactHoursSub   String @default("8:00 AM — 6:00 PM EAT")
+  contactEmailSub   String @default("We reply immediately")
+  contactPhoneSub   String @default("Mon–Fri, 8AM–6PM")
+
+  // ── ABOUT PAGE ──
+  aboutSubtitle String @default("About Novokraft")
+  aboutTitle    String @default("The Story Behind the Code")
+  aboutDesc     String @default("We're not just developers. We're craftspeople obsessed with building software that transforms how businesses operate.")
+
+  // ── FOOTER ──
+  footerTagline String @default("Engineering the digital backbone of tomorrow's enterprises. From Nairobi to the world.")
+  footerCopyright String @default("Novokraft Limited. All rights reserved.")
+
   updatedAt   DateTime @updatedAt
 }
